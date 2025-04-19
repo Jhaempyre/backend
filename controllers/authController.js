@@ -29,4 +29,36 @@ exports.login = async (req, res) => {
 
 exports.health = async(req,res)=>{
     res.status(200).json({ message: "Server is up and running" });
+};
+
+exports.updateProfile=async (req, res) => {
+
+  const {name,profileImage,email ,phone}=req.body;
+  console.log("Server request")
+try {
+  const user = await User.findOne({email})
+  console.log("user",user)
+  if (!user) return res.status(400).json({ error: "User not found"})
+    user.name=name
+    user.profileImage=profileImage
+    user.email=email
+    user.phone=phone
+  await user.save();
+  res.status(201).json({ message: 'User  Updated', data: user });
+} catch (err) {
+  res.status(500).json({ error: 'Error updating user' ,err});
 }
+};
+
+exports.getProfileData=async(req,res)=>{
+  try{
+    const {email}=req.body;
+    const user=await User.findOne({email});
+    res.status(200).json({ message: 'User Profile Data', data: user });
+    
+    }catch(err){
+      res.status(500).json({ error: 'Error fetching user data' });
+
+  }
+}
+
