@@ -44,9 +44,21 @@ try {
     user.email=email
     user.phone=phone
   await user.save();
-  res.status(201).json({ message: 'User  Updated', data: user });
+  console.log("user saved suceesfully ",user)
+  const responseUser = {
+    email: user.email,
+    phone: user.phone,
+    name: user.name,
+    profileImage: user.profileImage,
+    id: user._id.toString()
+  };
+  res.status(201).json({ 
+    success: true,
+    message: 'User Updated', 
+    user: responseUser 
+  });
 } catch (err) {
-  res.status(500).json({ error: 'Error updating user' ,err});
+  res.status(500).json({ error: 'Error updating user', err });
 }
 };
 
@@ -54,7 +66,7 @@ exports.getProfileData=async(req,res)=>{
   try{
     const {email}=req.body;
     const user=await User.findOne({email});
-    res.status(200).json({ message: 'User Profile Data', data: user });
+    res.status(200).json({ message: 'User Profile Data fetched Succesfully', data: user });
     
     }catch(err){
       res.status(500).json({ error: 'Error fetching user data' });
